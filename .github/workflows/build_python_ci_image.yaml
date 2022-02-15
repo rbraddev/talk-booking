@@ -2,9 +2,8 @@ name: Build and push Docker python ci image
 
 on:
   push:
-    branches: [master]
     paths:
-      - ./ci_cd/python/*
+      - ci_cd/python/*
   workflow_dispatch:
 
 permissions:
