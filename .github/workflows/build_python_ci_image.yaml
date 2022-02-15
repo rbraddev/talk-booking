@@ -3,7 +3,7 @@ name: Build and push Docker python ci image
 on:
   push:
     paths:
-      - services/ci_cd/python/Dockerfile
+      - ./services/ci_cd/python/Dockerfile
   workflow_dispatch:
 
 permissions:
