@@ -1,3 +1,5 @@
+name: Talk Booking Code Quality
+
 on:
   push:
     branches:
