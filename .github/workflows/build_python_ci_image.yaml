@@ -23,5 +23,6 @@ jobs:
       - uses: docker/build-push-action@v2
         with:
           context: ./services/ci_cd/python
+          file: ./services/ci_cd/python/Dockerfile
           push: true
           tags: ghcr.io/${{ github.repository }}/talk-booking:cicd-python3.10-slim
