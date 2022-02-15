@@ -16,6 +16,8 @@ jobs:
         uses: abatilo/actions-poetry@v2.0.0
         with:
           poetry-version: 1.1.12
+      - name: Change to talk_booking directory
+        run: cd services/talk_booking
       - name: Install dependencies
         run: poetry install
       - name: Run black
