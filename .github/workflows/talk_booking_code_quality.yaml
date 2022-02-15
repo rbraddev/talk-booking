@@ -3,17 +3,12 @@ name: Talk booking code quality
 on:
   push:
 
-permissions:
-  packages: write
-  pull-requests: write
-
 jobs:
   talk_booking_code_quality:
     runs-on: ubuntu-latest
     container: 
       image: ghcr.io/${{ github.repository }}/talk-booking:cicd-python3.10-slim
     steps:
-      - uses: actions/checkout@v2.4.0
       - run: cd services/talk_booking
       - run: poetry install
       - run: poetry run flake8 .
