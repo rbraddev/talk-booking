@@ -21,6 +21,6 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - uses: docker/build-push-action@v2
         with:
-          context: services/ci_cd/python/
+          context: ./services/ci_cd/python/
           push: true
           tags: ghcr.io/${{ github.repository }}/talk-booking:cicd-python3.10-slim
