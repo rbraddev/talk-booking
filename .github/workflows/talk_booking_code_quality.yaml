@@ -5,7 +5,7 @@ on:
 
 permissions:
   packages: write
-  pull-requests: read
+  pull-requests: write
 
 jobs:
   talk_booking_code_quality:
