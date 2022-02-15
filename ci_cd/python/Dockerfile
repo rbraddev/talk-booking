@@ -1,5 +1,5 @@
 FROM python:3.10-slim
-RUN mkdir -p /home/githut && addgroup github && useradd -d /home/github -g github github && chown github:github /home/github
+RUN mkdir -p /home/github && addgroup github && useradd -d /home/github -g github github && chown github:github /home/github
 RUN apt-get update && apt-get install -y curl
 USER github
 WORKDIR /home/github
