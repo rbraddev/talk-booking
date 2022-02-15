@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - services/ci_cd/python/Dockerfile
-  workflows_dispatch:
+  workflow_dispatch:
 
 permissions:
   packages: write
