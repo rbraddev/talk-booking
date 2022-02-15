@@ -17,7 +17,7 @@ jobs:
         with:
           poetry-version: 1.1.12
       - name: Change to talk_booking directory
-        run: cd services/talk_booking
+        run: pwd
       - name: Install dependencies
         run: poetry install
       - name: Run black
