@@ -1,7 +1,7 @@
-# variable "region" {
-#   description = "The AWS region to create resources in."
-#   default     = "eu-west-2"
-# }
+variable "region" {
+  description = "The AWS region to create resources in."
+  default     = "eu-west-2"
+}
 
 # variable "public_subnet_1_cidr" {
 #   description = "CIDR Block for Public Subnet 1"
