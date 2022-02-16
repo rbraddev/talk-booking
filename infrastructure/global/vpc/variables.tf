@@ -3,17 +3,33 @@ variable "region" {
   default     = "eu-west-2"
 }
 
+variable "public_subnet_1_name" {
+  description = "Name for Public Subnet 1"
+  default     = "Talk Booking Public Subnet 1"
+}
 variable "public_subnet_1_cidr" {
   description = "CIDR Block for Public Subnet 1"
   default     = "10.0.1.0/24"
+}
+variable "public_subnet_2_name" {
+  description = "Name for Public Subnet 2"
+  default     = "Talk Booking Public Subnet 2"
 }
 variable "public_subnet_2_cidr" {
   description = "CIDR Block for Public Subnet 2"
   default     = "10.0.2.0/24"
 }
+variable "private_subnet_1_name" {
+  description = "Name for Private Subnet 1"
+  default     = "Talk Booking Private Subnet 1"
+}
 variable "private_subnet_1_cidr" {
   description = "CIDR Block for Private Subnet 1"
   default     = "10.0.3.0/24"
+}
+variable "private_subnet_2_name" {
+  description = "Name for Private Subnet 2"
+  default     = "Talk Booking Private Subnet 2"
 }
 variable "private_subnet_2_cidr" {
   description = "CIDR Block for Private Subnet 2"
