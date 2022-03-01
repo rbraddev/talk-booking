@@ -14,11 +14,19 @@ resource "aws_subnet" "public-subnet-1" {
   cidr_block        = var.public_subnet_1_cidr
   vpc_id            = aws_vpc.talk-booking-vpc.id
   availability_zone = var.availability_zones[0]
+
+  tags = {
+    Name = "TalkBookingPublic1"
+  }
 }
 resource "aws_subnet" "public-subnet-2" {
   cidr_block        = var.public_subnet_2_cidr
   vpc_id            = aws_vpc.talk-booking-vpc.id
   availability_zone = var.availability_zones[1]
+
+  tags = {
+    Name = "TalkBookingPublic2"
+  }
 }
 
 # Private subnets
@@ -26,19 +34,35 @@ resource "aws_subnet" "private-subnet-1" {
   cidr_block        = var.private_subnet_1_cidr
   vpc_id            = aws_vpc.talk-booking-vpc.id
   availability_zone = var.availability_zones[0]
+
+  tags = {
+    Name = "TalkBookingPrivate1"
+  }
 }
 resource "aws_subnet" "private-subnet-2" {
   cidr_block        = var.private_subnet_2_cidr
   vpc_id            = aws_vpc.talk-booking-vpc.id
   availability_zone = var.availability_zones[1]
+
+  tags = {
+    Name = "TalkBookingPrivate2"
+  }
 }
 
 # Route tables for the subnets
 resource "aws_route_table" "public-route-table" {
   vpc_id = aws_vpc.talk-booking-vpc.id
+
+  tags = {
+    Name = "TalkBookingPublicRT"
+  }
 }
 resource "aws_route_table" "private-route-table" {
   vpc_id = aws_vpc.talk-booking-vpc.id
+
+  tags = {
+    Name = "TalkBookingPrivateRT"
+  }
 }
 
 # Associate the newly created route tables to the subnets
@@ -64,6 +88,10 @@ resource "aws_eip" "elastic-ip-for-nat-gw" {
   vpc                       = true
   associate_with_private_ip = "10.0.0.5"
   depends_on                = [aws_internet_gateway.production-igw]
+
+  tags = {
+    Name = "TalkBookingNGWIP"
+  }
 }
 
 # NAT gateway
@@ -71,6 +99,10 @@ resource "aws_nat_gateway" "nat-gw" {
   allocation_id = aws_eip.elastic-ip-for-nat-gw.id
   subnet_id     = aws_subnet.public-subnet-1.id
   depends_on    = [aws_eip.elastic-ip-for-nat-gw]
+
+  tags = {
+    Name = "TalkBookingNGW"
+  }
 }
 resource "aws_route" "nat-gw-route" {
   route_table_id         = aws_route_table.private-route-table.id
@@ -81,6 +113,10 @@ resource "aws_route" "nat-gw-route" {
 # Internet Gateway for the public subnet
 resource "aws_internet_gateway" "production-igw" {
   vpc_id = aws_vpc.talk-booking-vpc.id
+
+  tags = {
+    Name = "TalkBookingProductionIGW"
+  }
 }
 
 # Route the public subnet traffic through the Internet Gateway
@@ -88,4 +124,8 @@ resource "aws_route" "public-internet-igw-route" {
   route_table_id         = aws_route_table.public-route-table.id
   gateway_id             = aws_internet_gateway.production-igw.id
   destination_cidr_block = "0.0.0.0/0"
+
+  tags = {
+    Name = "TalkBookingIGWRoute"
+  }
 }
