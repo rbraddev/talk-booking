@@ -4,7 +4,7 @@ variable "region" {
 }
 
 variable "public_subnet_1_cidr" {
-  description = "CIDR Block for Public Subnet 1"
+  description = "CIDR Block for Public Subnet 1 NEW"
   default     = "10.0.1.0/24"
 }
 variable "public_subnet_2_cidr" {
