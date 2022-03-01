@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - ci_cd/python/*
+    branches:
+      - master
   workflow_dispatch:
 
 permissions:
