@@ -11,7 +11,8 @@ provider "aws" {
 }
 
 data "terraform_remote_state" "vpc" {
-  backend "s3" {
+  backend = "s3"
+  config = {
     bucket = "talk-booking-terraform"
     key = "terraform/tfstate"
     region = "eu-west-2"
