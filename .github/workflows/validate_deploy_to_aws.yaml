@@ -34,7 +34,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: terraform-state
-          path: ./.terraform
+          path: .terraform
   # deploy:
   #   if: github.event_name == 'workflow_dispatch'
       # - name: Run Terraform Apply
