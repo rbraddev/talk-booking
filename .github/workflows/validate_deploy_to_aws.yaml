@@ -30,11 +30,13 @@ jobs:
         run: terraform validate
       - name: Run Terraform Plan
         run: terraform plan
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: terraform-state
-          path: .terraform
+      - name: PWD
+        run: pwd
+      # - name: Upload Artifact
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: terraform-state
+      #     path: .terraform
   # deploy:
   #   if: github.event_name == 'workflow_dispatch'
       # - name: Run Terraform Apply
