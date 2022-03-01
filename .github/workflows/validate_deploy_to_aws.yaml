@@ -1,0 +1,36 @@
+name: Validate and Deploy to AWS
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - infrastructure/global/**/*
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+
+jobs:
+  validate_deploy_to_aws:
+    defaults:
+      run:
+        working-directory: infrastructure/global/vpc
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: eu-west-2
+      - name: Run Terraform Init
+        run: terraform init
+      - name: Run Terraform Validate
+        run: terraform validate
+      - name: Run Terraform Plan
+        run: terraform plan
+      - name: Deploy to AWS
+        if: github.event_name == 'workflow_dispatch'
+        run: terraform apply -auto-approve
