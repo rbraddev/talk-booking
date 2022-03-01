@@ -32,6 +32,8 @@ jobs:
         run: terraform plan
       - name: PWD
         run: pwd
+      - name: LS
+        run: ls -la
       # - name: Upload Artifact
       #   uses: actions/upload-artifact@v2
       #   with:
