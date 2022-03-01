@@ -34,11 +34,11 @@ jobs:
         run: pwd
       - name: LS
         run: ls -la
-      # - name: Upload Artifact
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: terraform-state
-      #     path: .terraform
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: terraform-state
+          path: .terraform
   # deploy:
   #   if: github.event_name == 'workflow_dispatch'
       # - name: Run Terraform Apply
