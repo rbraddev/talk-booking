@@ -33,4 +33,4 @@ jobs:
         run: terraform plan
       - name: Deploy AWS VPC
         if: github.event_name == 'workflow_dispatch'
-        run: terraform apply -destroy -auto-approve
+        run: terraform apply -auto-approve
