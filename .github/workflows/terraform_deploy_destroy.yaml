@@ -1,4 +1,4 @@
-name: Validate and Deploy Template
+name: Deploy or Destroy Template
 
 on:
   workflow_call:
@@ -6,6 +6,10 @@ on:
       working_directory:
         required: true
         type: string
+      destroy:
+        required: false
+        default: false
+
     secrets:
       AWS_ROLE_ARN:
         required: true
@@ -14,7 +18,7 @@ permissions:
   id-token: write
 
 jobs:
-  validate_deploy:
+  validate_terraform:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -31,8 +35,9 @@ jobs:
         run: terraform init
       - name: Run Terraform Validate
         run: terraform validate
-      - name: Run Terraform Plan
-        run: terraform plan
-      - name: Deploy
-        if: github.event_name == 'workflow_dispatch'
-        run: terraform apply -auto-approve
+      - name: Run Terraform Deploy
+        if: github.event_name == 'workflow_dispatch' && !${{ input.destroy }}
+        run: terraform plan && terraform deploy -auto-approve
+      - name: Run Terraform Destroy
+        if: github.event_name == 'workflow_dispatch' && ${{ input.destroy }}
+        run: terraform plan && terraform destroy -auto-approve
