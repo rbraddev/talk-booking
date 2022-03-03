@@ -1,0 +1,26 @@
+name: Validate and Deploy Developmemt Environment
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - infrastructure/modules/**/*
+      - infrastructure/talk-booking-service/**/*
+  workflow_dispatch:
+
+jobs:
+  validate_dev_env:
+    uses: ./.github/workflows/terraform_validate.yaml
+    with:
+      working_directory: infrastructure/talk-booking-service/development
+    secrets:
+      aws_role_arn: ${{ secrets.AWS_ROLE_ARN }}
+  
+  deploy_dev_environment:
+    needs: [validate_dev_env]
+    uses: ./.github/workflows/terraform_deploy.yaml
+    with:
+      working_directory: infrastructure/talk-booking-service/development
+    secrets:
+      aws_role_arn: ${{ secrets.AWS_ROLE_ARN }}
