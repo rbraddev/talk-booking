@@ -17,10 +17,12 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
-      - name: Validate
-        uses: ./.github/workflows/terraform_validate.yaml
-        with:
-          working_directory: infrastructure/global/vpc
-      - name: Deploy AWS VPC
-        if: github.event_name == 'workflow_dispatch'
-        run: terraform apply -auto-approve
+      - name: PWD
+        run: pwd
+      # - name: Validate
+      #   uses: ./.github/workflows/terraform_validate.yaml
+      #   with:
+      #     working_directory: infrastructure/global/vpc
+      # - name: Deploy AWS VPC
+      #   if: github.event_name == 'workflow_dispatch'
+      #   run: terraform apply -auto-approve
