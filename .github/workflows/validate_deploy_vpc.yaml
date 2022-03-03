@@ -1,4 +1,4 @@
-name: Validate and Deploy AWS VPC
+name: Validate From Template
 
 on:
   push:
