@@ -1,30 +1,20 @@
-name: Destroy AWS Development Environment
+name: Destroy Developmemt Environment
 
 on:
   workflow_dispatch:
 
-permissions:
-  id-token: write
-
 jobs:
-  destroy_aws_development:
-    defaults:
-      run:
-        working-directory: infrastructure/talk-booking-service/development
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v2
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: eu-west-2
-      - name: Run Terraform Init
-        run: terraform init
-      - name: Run Terraform Validate
-        run: terraform validate
-      - name: Run Terraform Plan
-        run: terraform plan
-      - name: Destroy Development
-        run: terraform apply -destroy -auto-approve
+  validate_dev_env:
+    uses: ./.github/workflows/terraform_validate.yaml
+    with:
+      working_directory: infrastructure/talk-booking-service/development
+    secrets:
+      aws_role_arn: ${{ secrets.AWS_ROLE_ARN }}
+  
+  destroy_dev_environment:
+    needs: [validate_dev_env]
+    uses: ./.github/workflows/terraform_destroy.yaml
+    with:
+      working_directory: infrastructure/talk-booking-service/development
+    secrets:
+      aws_role_arn: ${{ secrets.AWS_ROLE_ARN }}

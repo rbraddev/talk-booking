@@ -1,4 +1,4 @@
-name: Deploy or Destroy Template
+name: Deploy Template
 
 on:
   workflow_call:
@@ -14,7 +14,7 @@ permissions:
   id-token: write
 
 jobs:
-  validate_terraform:
+  deploy_terraform:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -29,8 +29,6 @@ jobs:
           aws-region: eu-west-2
       - name: Run Terraform Init
         run: terraform init
-      - name: Run Terraform Validate
-        run: terraform validate
       - name: Run Terraform Deploy
         if: github.event_name == 'workflow_dispatch'
         run: terraform plan && terraform apply -auto-approve

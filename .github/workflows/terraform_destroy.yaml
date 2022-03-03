@@ -1,22 +1,24 @@
-name: Validate and Deploy AWS VPC
+name: Destroy Template
 
 on:
-  push:
-    branches:
-      - master
-    paths:
-      - infrastructure/global/**/*
-  workflow_dispatch:
+  workflow_call:
+    inputs:
+      working_directory:
+        required: true
+        type: string
+    secrets:
+      AWS_ROLE_ARN:
+        required: true
 
 permissions:
   id-token: write
 
 jobs:
-  validate_deploy_aws_vpc:
+  destroy_terraform:
+    runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: infrastructure/global/vpc
-    runs-on: ubuntu-latest
+        working-directory: ${{ inputs.working_directory }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
@@ -27,10 +29,6 @@ jobs:
           aws-region: eu-west-2
       - name: Run Terraform Init
         run: terraform init
-      - name: Run Terraform Validate
-        run: terraform validate
-      - name: Run Terraform Plan
-        run: terraform plan
-      - name: Deploy AWS VPC
+      - name: Run Terraform Destroy
         if: github.event_name == 'workflow_dispatch'
-        run: terraform apply -auto-approve
+        run: terraform plan && terraform destroy -auto-approve
