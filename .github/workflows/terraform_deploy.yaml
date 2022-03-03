@@ -33,4 +33,4 @@ jobs:
         run: terraform validate
       - name: Run Terraform Deploy
         if: github.event_name == 'workflow_dispatch'
-        run: terraform plan && terraform deploy -auto-approve
+        run: terraform plan && terraform apply -auto-approve
