@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  validate__vpc:
+  validate_vpc:
     uses: ./.github/workflows/terraform_validate.yaml
     with:
       working_directory: infrastructure/global/vpc
