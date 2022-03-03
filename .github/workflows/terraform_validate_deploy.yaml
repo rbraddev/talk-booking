@@ -28,11 +28,11 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: eu-west-2
       - name: Run Terraform Init
-        run: Terraform Init
+        run: terraform iunit
       - name: Run Terraform Validate
-        run: Terraform Validate
+        run: terraform validate
       - name: Run Terraform Plan
-        run: Terraform Plan
+        run: terraform plan
       - name: Deploy
         if: github.event_name == 'workflow_dispatch'
         run: terraform apply -auto-approve
