@@ -15,14 +15,8 @@ jobs:
   validate_deploy_aws_vpc:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v2
-      - name: PWD
-        run: pwd
-      - name: LS
-        run: ls -la
       - name: Validate
-        uses: ./.github/workflows/terraform_validate.yaml
+        uses: rbraddev/talk-booking/.github/workflows/terraform_validate.yaml@main
         with:
           working_directory: infrastructure/global/vpc
       # - name: Deploy AWS VPC
