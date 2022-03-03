@@ -13,7 +13,6 @@ permissions:
 
 jobs:
   validate_deploy_aws_vpc:
-    runs-on: ubuntu-latest
     steps:
       - name: Validate
         uses: rbraddev/talk-booking/.github/workflows/terraform_validate.yaml@master
