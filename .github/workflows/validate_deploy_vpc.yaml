@@ -10,7 +10,7 @@ on:
 
 jobs:
   validate_deploy_aws_vpc:
-    uses: ${{ github.repo }}/.github/workflows/terraform_validate_deploy.yaml@master
+    uses: ${{ github.repository }}/.github/workflows/terraform_validate_deploy.yaml@master
     with:
       working_directory: infrastructure/global/vpc
     secrets:
