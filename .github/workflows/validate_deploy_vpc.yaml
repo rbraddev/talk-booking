@@ -1,4 +1,4 @@
-name: Validate From Template
+name: Validate and Deploy VPC
 
 on:
   push:
@@ -10,11 +10,8 @@ on:
 
 jobs:
   validate_deploy_aws_vpc:
-    uses: rbraddev/talk-booking/.github/workflows/terraform_validate.yaml@master
+    uses: ${{ github.repo }}/.github/workflows/terraform_validate_deploy.yaml@${{ github.ref_name }}
     with:
       working_directory: infrastructure/global/vpc
     secrets:
       aws_role_arn: ${{ secrets.AWS_ROLE_ARN }}
-      # - name: Deploy AWS VPC
-      #   if: github.event_name == 'workflow_dispatch'
-      #   run: terraform apply -auto-approve
