@@ -17,7 +17,7 @@ jobs:
       aws_role_arn: ${{ secrets.AWS_ROLE_ARN }}
   
   deploy_vpc:
-    uses: ./.github/workflows/terraform_validate_deploy.yaml
+    uses: ./.github/workflows/terraform_deploy_destroy.yaml
     with:
       working_directory: infrastructure/global/vpc
     secrets:
