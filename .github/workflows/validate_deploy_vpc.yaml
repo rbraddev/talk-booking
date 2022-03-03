@@ -22,7 +22,7 @@ jobs:
       - name: LS
         run: ls -la
       - name: Validate
-        uses: .github/workflows/terraform_validate.yaml
+        uses: ./.github/workflows/terraform_validate.yaml
         with:
           working_directory: infrastructure/global/vpc
       # - name: Deploy AWS VPC
