@@ -21,10 +21,10 @@ jobs:
         run: pwd
       - name: LS
         run: ls -la
-      # - name: Validate
-      #   uses: ./.github/workflows/terraform_validate.yaml
-      #   with:
-      #     working_directory: infrastructure/global/vpc
+      - name: Validate
+        uses: .github/workflows/terraform_validate.yaml
+        with:
+          working_directory: infrastructure/global/vpc
       # - name: Deploy AWS VPC
       #   if: github.event_name == 'workflow_dispatch'
       #   run: terraform apply -auto-approve
