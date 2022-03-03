@@ -1,0 +1,24 @@
+name: Validate and Deploy AWS VPC
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - infrastructure/global/**/*
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+
+jobs:
+  validate_deploy_aws_vpc:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate
+        uses: ./.github/workflows/terraform_validate.yaml
+        with:
+          working_directory: infrastructure/global/vpc
+      - name: Deploy AWS VPC
+        if: github.event_name == 'workflow_dispatch'
+        run: terraform apply -auto-approve
