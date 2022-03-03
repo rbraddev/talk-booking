@@ -8,9 +8,6 @@ on:
       - infrastructure/global/**/*
   workflow_dispatch:
 
-permissions:
-  id-token: write
-
 jobs:
   validate_deploy_aws_vpc:
     steps:
