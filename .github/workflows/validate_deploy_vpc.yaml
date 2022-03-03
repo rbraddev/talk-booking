@@ -13,6 +13,7 @@ jobs:
     uses: rbraddev/talk-booking/.github/workflows/terraform_validate.yaml@master
     with:
       working_directory: infrastructure/global/vpc
+    secrets:
       aws_role_arn: ${{ secrets.AWS_ROLE_ARN }}
       # - name: Deploy AWS VPC
       #   if: github.event_name == 'workflow_dispatch'
