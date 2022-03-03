@@ -28,7 +28,7 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: eu-west-2
       - name: Run Terraform Init
-        run: terraform iunit
+        run: terraform init
       - name: Run Terraform Validate
         run: terraform validate
       - name: Run Terraform Plan
