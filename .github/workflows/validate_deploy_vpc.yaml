@@ -11,8 +11,7 @@ on:
 jobs:
   validate_deploy_aws_vpc:
     steps:
-      - name: Validate
-        uses: rbraddev/talk-booking/.github/workflows/terraform_validate.yaml@master
+      - uses: rbraddev/talk-booking/.github/workflows/terraform_validate.yaml@master
         with:
           working_directory: infrastructure/global/vpc
       # - name: Deploy AWS VPC
