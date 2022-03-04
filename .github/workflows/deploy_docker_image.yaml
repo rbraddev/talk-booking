@@ -29,4 +29,4 @@ jobs:
       - name: Install Boto3
         run: pip install boto3
       - name: Deploy Docker Image
-        run: python deploy.py --cluster_name ${{ inputs.environment name }} --service_name ${{ inputs.environment name }} --new_image_uri ${{ inputs.docker_image_tags }}
+        run: python deploy.py --cluster_name ${{ inputs.environment_name }} --service_name ${{ inputs.environment_name }} --new_image_uri ${{ inputs.docker_image_tags }}
