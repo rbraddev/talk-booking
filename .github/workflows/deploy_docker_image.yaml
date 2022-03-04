@@ -1,0 +1,32 @@
+name: Deploy Template
+
+on:
+  workflow_call:
+    inputs:
+      environment_name:
+        required: true
+        type: string
+      docker_image_tag:
+        required: true
+        type: string
+
+jobs:
+  deploy_docker_image:
+    defaults:
+      run:
+        working-directory: services/talk_booking
+    strategy:
+      matrix:
+        python-version: ['3.10']
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Boto3
+        run: pip install boto3
+      - name: Deploy Docker Image
+        run: python deploy.py --cluster_name ${{ inputs.environment name }} --service_name ${{ inputs.environment name }} --new_image_uri ${{ inputs.docker_image_tags }}
