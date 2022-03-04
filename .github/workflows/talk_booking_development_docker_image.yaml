@@ -8,6 +8,9 @@ on:
       - services/talk_booking/**/*
   workflow_dispatch:
 
+permissions:
+  id-token: write
+
 jobs:
   build_development_docker_image:
     defaults:
@@ -20,11 +23,6 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: eu-west-2
       - uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
@@ -34,6 +32,11 @@ jobs:
           poetry-version: 1.1.12
       - name: Extract Requirements
         run: poetry export --without-hashes --with-credentials -f requirements.txt > requirements.txt
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: eu-west-2
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
