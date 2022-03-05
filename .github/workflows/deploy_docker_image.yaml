@@ -16,6 +16,9 @@ on:
 # env:
 #   AWS_DEFAULT_REGION: ${{ inputs.aws_region }}
 
+permissions:
+  id-token: write 
+
 jobs:
   deploy_docker_image:
     defaults:
