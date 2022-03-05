@@ -108,9 +108,10 @@ jobs:
           ECR_REPOSITORY: talk-booking-dev
           IMAGE_TAG: development-${{ github.sha }}
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "::set-output name=tag::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          docker build -t $ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REPOSITORY:$IMAGE_TAG
+          echo "tagged -> $ECR_REPOSITORY:$IMAGE_TAG"
+          echo "::set-output name=tag::$ECR_REPOSITORY:$IMAGE_TAG"
   deploy_docker_image:
     needs: [build_docker_image]
     runs-on: ubuntu-latest
