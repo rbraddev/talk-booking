@@ -113,7 +113,7 @@ jobs:
     uses: ./.github/workflows/deploy_docker_image.yaml
     with:
       environment_name: talk-booking-dev
-      docker_image_tag: development-${{github.sha}}
+      docker_image_tag: 619775905734.dkr.ecr.eu-west-2.amazonaws.com/talk-booking-dev/development-${{ github.sha }}
     secrets:
       aws_role_arn: ${{ secrets.AWS_ROLE_ARN }}
       # aws_region: eu-west-2
