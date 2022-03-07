@@ -114,5 +114,5 @@ jobs:
     with:
       environment_name: talk-booking-dev
       docker_image_tag: development-${{github.sha}}
-      aws_role_arn: £{{ secrets.AWS_ROLE_ARN }}
+      aws_role_arn: ${{ secrets.AWS_ROLE_ARN }}
       # aws_region: eu-west-2
