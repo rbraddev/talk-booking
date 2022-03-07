@@ -11,7 +11,7 @@ on:
         type: string
     secrets:
       aws_role_arn:
-        required: trie
+        required: true
         type: string
 
 permissions:
