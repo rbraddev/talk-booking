@@ -28,8 +28,6 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
-      - name: Check Repo Name
-        run: echo ${{ inputs.docker_image_tag }}
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
@@ -47,4 +45,6 @@ jobs:
       - name: Deploy Docker Image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        run: python deploy.py --cluster_name ${{ inputs.environment_name }} --service_name ${{ inputs.environment_name }} --new_image_uri ${{ ECR_REGISTRY }}/${{ inputs.docker_image_tag }}
+        run: |
+          echo ${{ ECR_REGISTRY }}/${{ inputs.docker_image_tag }}
+          python deploy.py --cluster_name ${{ inputs.environment_name }} --service_name ${{ inputs.environment_name }} --new_image_uri ${{ ECR_REGISTRY }}/${{ inputs.docker_image_tag }}
