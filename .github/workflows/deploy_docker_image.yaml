@@ -28,6 +28,8 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
+      - name: Check Repo Name
+        run: echo ${{ inputs.docker_image_tag }}
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
