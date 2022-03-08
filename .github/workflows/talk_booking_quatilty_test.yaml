@@ -80,7 +80,7 @@ jobs:
         poetry-version: ['1.1.12']
     runs-on: ubuntu-latest
     outputs:
-      ecr_registry: ${{ steps.login-ecr.outputs.registry }}
+      ecr_registry: ${{ steps.ecr_registry_output.outputs.ecr_registry }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
@@ -102,9 +102,9 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
-      # - name: Set ECR_REGISTRY Output
-      #   id: ecr_registry_output
-      #   run: echo "::set-output name=ecr_registry::${{ steps.login-ecr.outputs.registry}}"
+      - name: Set ECR_REGISTRY Output
+        id: ecr_registry_output
+        run: echo "::set-output name=ecr_registry::${{ steps.login-ecr.outputs.registry}}"
       - name: Build, tag, and push image to Amazon ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
