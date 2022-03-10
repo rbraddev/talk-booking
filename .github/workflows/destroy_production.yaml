@@ -1,20 +1,20 @@
-name: Destroy Development Environment
+name: Destroy Production Environment
 
 on:
   workflow_dispatch:
 
 jobs:
-  validate_dev_env:
+  validate_prod_env:
     uses: ./.github/workflows/terraform_validate.yaml
     with:
-      working_directory: infrastructure/talk-booking-service/development
+      working_directory: infrastructure/talk-booking-service/production
     secrets:
       aws_role_arn: ${{ secrets.AWS_ROLE_ARN }}
   
-  destroy_dev_environment:
-    needs: [validate_dev_env]
+  destroy_prod_environment:
+    needs: [validate_prod_env]
     uses: ./.github/workflows/terraform_destroy.yaml
     with:
-      working_directory: infrastructure/talk-booking-service/development
+      working_directory: infrastructure/talk-booking-service/production
     secrets:
       aws_role_arn: ${{ secrets.AWS_ROLE_ARN }}

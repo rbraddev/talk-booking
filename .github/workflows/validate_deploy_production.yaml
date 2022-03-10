@@ -1,4 +1,4 @@
-name: Validate and Deploy Development Environment
+name: Validate and Deploy Production Environment
 
 on:
   push:
@@ -10,17 +10,17 @@ on:
   workflow_dispatch:
 
 jobs:
-  validate_dev_env:
+  validate_prod_env:
     uses: ./.github/workflows/terraform_validate.yaml
     with:
-      working_directory: infrastructure/talk-booking-service/development
+      working_directory: infrastructure/talk-booking-service/production
     secrets:
       aws_role_arn: ${{ secrets.AWS_ROLE_ARN }}
   
-  deploy_dev_environment:
-    needs: [validate_dev_env]
+  deploy_prod_environment:
+    needs: [validate_prod_env]
     uses: ./.github/workflows/terraform_deploy.yaml
     with:
-      working_directory: infrastructure/talk-booking-service/development
+      working_directory: infrastructure/talk-booking-service/production
     secrets:
       aws_role_arn: ${{ secrets.AWS_ROLE_ARN }}
