@@ -137,5 +137,7 @@ jobs:
         uses: abatilo/actions-poetry@v2.0.0
         with:
           poetry-version: ${{ matrix.poetry-version }}
+      - name: Install Dependancies
+        run: poetry install
       - name: Run Tests
-        run: poetry run python -m pytest tests/e2e
+        run: poetry run pytest tests/e2e
