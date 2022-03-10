@@ -5,8 +5,8 @@ on:
     branches:
       - master
     paths:
-      - infrastructure/modules/**/*
-      - infrastructure/talk-booking-service/**/*
+      - infrastructure/modules/talk-booking-service/**/*
+      - infrastructure/talk-booking-service/production/**/*
   workflow_dispatch:
 
 jobs:
