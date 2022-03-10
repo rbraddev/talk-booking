@@ -1,0 +1,55 @@
+name: Prod - Build and Deploy
+
+on:
+  workflow_dispatch: 
+
+permissions:
+  id-token: write   
+
+jobs:
+  build_docker_image:
+    defaults:
+      run:
+        working-directory: services/talk_booking
+    strategy:
+      matrix:
+        python-version: ['3.10']
+        poetry-version: ['1.1.12']
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Setup Poetry
+        uses: abatilo/actions-poetry@v2.0.0
+        with:
+          poetry-version: ${{ matrix.poetry-version }}
+      - name: Extract Requirements
+        run: poetry export --without-hashes --with-credentials -f requirements.txt > requirements.txt
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: eu-west-2
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      - name: Build, tag, and push image to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: talk-booking-prod
+          IMAGE_TAG: production-${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+  deploy_docker_image:
+    needs: [build_docker_image]
+    uses: ./.github/workflows/deploy_docker_image.yaml
+    with:
+      environment_name: talk-booking-prod
+      docker_image_tag: talk-booking-prod:production-${{ github.sha }}
+    secrets:
+      aws_role_arn: ${{ secrets.AWS_ROLE_ARN }}
