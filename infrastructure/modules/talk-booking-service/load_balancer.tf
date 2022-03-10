@@ -6,7 +6,6 @@ resource "aws_lb" "load_balancer" {
   subnets            = [var.public_subnet_1_id, var.public_subnet_2_id]
 }
 
-# Target group client
 resource "aws_alb_target_group" "default-target-group" {
   name     = "${var.environment_name}-client-tg"
   port     = 80
@@ -25,7 +24,6 @@ resource "aws_alb_target_group" "default-target-group" {
   }
 }
 
-# Target group users
 resource "aws_alb_target_group" "users-target-group" {
   name     = "${var.environment_name}-users-tg"
   port     = var.container_port
@@ -43,7 +41,6 @@ resource "aws_alb_target_group" "users-target-group" {
   }
 }
 
-# Listener (redirects traffic from the load balancer to the target group)
 resource "aws_alb_listener" "ecs-alb-http-listener" {
   load_balancer_arn = aws_lb.load_balancer.id
   port              = "80"
@@ -51,7 +48,24 @@ resource "aws_alb_listener" "ecs-alb-http-listener" {
   depends_on        = [aws_alb_target_group.default-target-group]
 
   default_action {
+    type             = "redirect"
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+}
+
+resource "aws_alb_listener" "ecs-alb-https-listener" {
+  load_balancer_arn = aws_lb.load_balancer.id
+  port              = "443"
+  protocol          = "HTTPS"
+  depends_on        = [aws_alb_target_group.default-target-group]
+
+  default_action {
     type             = "forward"
     target_group_arn = aws_alb_target_group.default-target-group.arn
   }
+  certificate_arn = aws_acm_certificate.app.arn
 }
