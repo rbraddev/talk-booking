@@ -13,7 +13,7 @@ def test_talk_request_attributes():
     talk_request = TalkRequest(
         id="request_id",
         event_time=event_time,
-            address=Address(
+        address=Address(
             street="Know Your Role Boulevard",
             city="Las Vegas",
             state="Nevada",
