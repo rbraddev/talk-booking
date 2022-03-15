@@ -21,3 +21,7 @@ class TalkRequest(SQLModel):
     duration_in_minutes: PositiveInt
     requester: EmailStr
     status: TalkRequestStatus
+
+    @property
+    def is_rejected(self):
+        return self.status == TalkRequestStatus.REJECTED
