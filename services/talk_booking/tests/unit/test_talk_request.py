@@ -42,5 +42,5 @@ def test_talk_request_attributes():
     assert talk_request.status == "PENDING"
     assert talk_request.is_rejected is False
 
-    talk_request.status = 'REJECTED'
+    talk_request.status = "REJECTED"
     assert talk_request.is_rejected is True
