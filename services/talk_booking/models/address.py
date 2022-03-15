@@ -1,5 +1,6 @@
 from sqlmodel import SQLModel
 
+
 class Address(SQLModel):
     street: str
     city: str

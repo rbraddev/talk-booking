@@ -7,11 +7,11 @@ from pydantic import PositiveInt, EmailStr
 from .address import Address
 
 
-
 class TalkRequestStatus(str, Enum):
     PENDING = "PENDING"
     ACCEPTED = "ACCEPTED"
     REJECTED = "REJECTED"
+
 
 class TalkRequest(SQLModel):
     id: str
