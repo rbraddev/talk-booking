@@ -47,30 +47,43 @@ resource "aws_alb_listener" "ecs-alb-http-listener" {
   protocol          = "HTTP"
   depends_on        = [aws_alb_target_group.default-target-group]
 
-  #default_action {
-  #  type             = "redirect"
-  #  redirect {
-  #    port        = "443"
-  #    protocol    = "HTTPS"
-  #    status_code = "HTTP_301"
-  #  }
-  #}
+  # default_action {
+  #   type             = "forward"
+  #   target_group_arn = aws_alb_target_group.default-target-group.arn
+  # }
+
+  # dynamic "default_action" {
+  #   for_each = aws_alb_target_group.users-target-group.health_check.enabled ? [1] : []
+
+  #   content {
+  #     type             = "redirect"
+  #     redirect {
+  #       port        = "443"
+  #       protocol    = "HTTPS"
+  #       status_code = "HTTP_301"
+  #     }
+  #   }
+  # }
 
   default_action {
-    type             = "forward"
-    target_group_arn = aws_alb_target_group.default-target-group.arn
+    type             = "redirect"
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
   }
 }
 
-#resource "aws_alb_listener" "ecs-alb-https-listener" {
-#  load_balancer_arn = aws_lb.load_balancer.id
-#  port              = "443"
-#  protocol          = "HTTPS"
-#  depends_on        = [aws_alb_target_group.default-target-group]
-#
-#  default_action {
-#    type             = "forward"
-#    target_group_arn = aws_alb_target_group.default-target-group.arn
-#  }
-#  certificate_arn = aws_acm_certificate.app.arn
-#}
+resource "aws_alb_listener" "ecs-alb-https-listener" {
+ load_balancer_arn = aws_lb.load_balancer.id
+ port              = "443"
+ protocol          = "HTTPS"
+ depends_on        = [aws_alb_target_group.default-target-group]
+
+ default_action {
+   type             = "forward"
+   target_group_arn = aws_alb_target_group.default-target-group.arn
+ }
+ certificate_arn = aws_acm_certificate.app.arn
+}
