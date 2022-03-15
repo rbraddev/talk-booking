@@ -1,8 +1,8 @@
 import datetime
 from enum import Enum
 
+from pydantic import EmailStr, PositiveInt
 from sqlmodel import SQLModel
-from pydantic import PositiveInt, EmailStr
 
 from .address import Address
 
