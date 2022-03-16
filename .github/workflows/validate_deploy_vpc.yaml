@@ -23,4 +23,26 @@ jobs:
       working_directory: infrastructure/global/vpc
     secrets:
       aws_role_arn: ${{ secrets.AWS_ROLE_ARN }}
+  
+  update_name_servers:
+    needs: [deploy_vpc]
+    defaults:
+      run:
+        working-directory: services/talk_booking
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.aws_role_arn }}
+          aws-region: eu-west-2
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      - name: Install Boto3
+        run: pip install boto3
+      - name: Update Name Servers
+        run: python update_dns.py --domain bradcloud.co.uk
       

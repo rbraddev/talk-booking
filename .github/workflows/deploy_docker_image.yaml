@@ -45,6 +45,4 @@ jobs:
       - name: Deploy Docker Image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        run: |
-          echo $ECR_REGISTRY/${{ inputs.docker_image_tag }}
-          python deploy.py --cluster_name ${{ inputs.environment_name }} --service_name ${{ inputs.environment_name }} --new_image_uri $ECR_REGISTRY/${{ inputs.docker_image_tag }}
+        run: python deploy.py --cluster_name ${{ inputs.environment_name }} --service_name ${{ inputs.environment_name }} --new_image_uri $ECR_REGISTRY/${{ inputs.docker_image_tag }}
