@@ -3,7 +3,7 @@ import argparse
 import boto3
 
 
-def get_zone_id(client, domain_name: str) -> str:
+def get_zone_id(client, domain_name):
     zones = client.list_hosted_zones()
     try:
         zone_id = next(
@@ -16,7 +16,7 @@ def get_zone_id(client, domain_name: str) -> str:
     return zone_id
 
 
-def get_record_set(client, zone_id: str) -> list[dict]:
+def get_record_set(client, zone_id):
     record_sets = client.list_resource_record_sets(HostedZoneId=zone_id)[
         "ResourceRecordSets"
     ]
@@ -29,7 +29,7 @@ def get_record_set(client, zone_id: str) -> list[dict]:
     return [{"Name": record["Value"]} for record in record_set]
 
 
-def update_domain_record_set(client, domain_name: str, record_set: list[dict]) -> None:
+def update_domain_record_set(client, domain_name, record_set):
     response = client.update_domain_nameservers(
         DomainName=domain_name, Nameservers=record_set
     )
