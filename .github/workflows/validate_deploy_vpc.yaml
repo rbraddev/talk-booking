@@ -8,6 +8,9 @@ on:
       - infrastructure/global/**/*
   workflow_dispatch:
 
+permissions:
+  id-token: write
+
 jobs:
   validate_vpc:
     uses: ./.github/workflows/terraform_validate.yaml

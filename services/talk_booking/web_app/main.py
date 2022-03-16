@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from models import SubmitTalkRequest
+from models import SubmitTalkRequest, TalkRequestDetails
 
 app = FastAPI()
 
@@ -10,7 +10,7 @@ def health_check():
     return {"message": "OK"}
 
 
-@app.post("/request-talk/", status_code=201)
+@app.post("/request-talk/", status_code=201, response_model=TalkRequestDetails)
 def request_talk(submit_talk_request: SubmitTalkRequest):
     return {
         "id": "unique_id",
