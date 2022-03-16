@@ -1,4 +1,4 @@
-name: Dev - Code Quality, Test and Build
+name: Dev - Code Quality and Test
 
 on:
   push:
