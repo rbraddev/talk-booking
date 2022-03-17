@@ -31,12 +31,12 @@ resource "aws_security_group" "rds" {
 
 resource "aws_db_instance" "talk_booking" {
   identifier              = var.environment_name
-  name                    = "app"
+  db_name                 = "app"
   username                = "app"
   password                = random_password.db_password.result
   port                    = "5432"
   engine                  = "postgres"
-  engine_version          = "12.5"
+  engine_version          = "12.10"
   instance_class          = "db.t3.micro"
   allocated_storage       = "20"
   storage_encrypted       = false
