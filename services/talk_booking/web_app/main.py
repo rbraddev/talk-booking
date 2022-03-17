@@ -1,9 +1,33 @@
+import pathlib
+import uuid
+
 from fastapi import FastAPI
+from sqlmodel import Session, SQLModel, create_engine
 
 from models.api_requests import AcceptTalkRequest, RejectTalkRequest, SubmitTalkRequest
 from models.api_responses import TalkRequestDetails, TalkRequestList
 
+from .config import load_config
+
 app = FastAPI()
+app_config = load_config()
+
+connect_args = {"check_same_thread": False}
+engine = create_engine(app_config.SQLMODEL_DATABASE_URI, echo=False)
+
+
+def create_db_and_tables():
+    SQLModel.metadata.create_all(engine)
+
+
+def get_session():
+    with Session(engine) as session:
+        yield session
+
+
+@app.on_event("startup")
+def on_startup():
+    create_db_and_tables()
 
 
 @app.get("/health-check/")
