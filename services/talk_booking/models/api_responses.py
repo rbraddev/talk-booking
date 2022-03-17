@@ -15,3 +15,7 @@ class TalkRequestDetails(SQLModel):
     duration_in_minutes: PositiveInt
     requester: EmailStr
     status: TalkRequestStatus
+
+
+class TalkRequestList(SQLModel):
+    results: list[TalkRequestDetails]
