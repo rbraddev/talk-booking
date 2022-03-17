@@ -12,5 +12,10 @@ class SubmitTalkRequest(BaseModel):
     duration_in_minutes: PositiveInt
     requester: EmailStr
 
+
 class AcceptTalkRequest(BaseModel):
+    id: str
+
+
+class RejectTalkRequest(BaseModel):
     id: str

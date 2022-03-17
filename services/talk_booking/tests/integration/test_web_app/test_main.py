@@ -82,6 +82,7 @@ def test_list_requests(client):
     assert talk_requests[0]["duration_in_minutes"] == 45
     assert talk_requests[0]["requester"] == "john@doe.com"
 
+
 def test_accept_talk_request(client):
     """
     GIVEN id of talk request
@@ -96,3 +97,19 @@ def test_accept_talk_request(client):
     response_body = response.json()
     assert response_body["id"] == "unique_id"
     assert response_body["status"] == "ACCEPTED"
+
+
+def test_reject_talk_request(client):
+    """
+    GIVEN id of talk request
+    WHEN reject talk request endpoint is called
+    THEN request is accepted
+    """
+    response = client.post(
+        "/talk-request/reject/",
+        json={"id": "unique_id"},
+    )
+    assert response.status_code == 200
+    response_body = response.json()
+    assert response_body["id"] == "unique_id"
+    assert response_body["status"] == "REJECTED"
