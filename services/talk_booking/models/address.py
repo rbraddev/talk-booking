@@ -1,7 +1,7 @@
-from sqlmodel import SQLModel
+from pydantic import BaseModel
 
 
-class Address(SQLModel):
+class Address(BaseModel):
     street: str
     city: str
     state: str

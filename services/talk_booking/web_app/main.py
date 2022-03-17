@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 
-from models import SubmitTalkRequest, TalkRequestDetails
+from models.api_requests import AcceptTalkRequest, RejectTalkRequest, SubmitTalkRequest
+from models.api_responses import TalkRequestDetails, TalkRequestList
 
 app = FastAPI()
 
@@ -20,4 +21,62 @@ def request_talk(submit_talk_request: SubmitTalkRequest):
         "status": "PENDING",
         "duration_in_minutes": submit_talk_request.duration_in_minutes,
         "requester": submit_talk_request.requester,
+    }
+
+
+@app.get("/talk-requests/", status_code=200, response_model=TalkRequestList)
+def talk_requests():
+    return {
+        "results": [
+            {
+                "id": "unique_id",
+                "event_time": "2021-10-03T10:30:00",
+                "address": {
+                    "street": "Know Your Role Boulevard",
+                    "city": "Las Vegas",
+                    "state": "Nevada",
+                    "country": "USA",
+                },
+                "topic": "FastAPI with Pydantic",
+                "status": "PENDING",
+                "duration_in_minutes": 45,
+                "requester": "john@doe.com",
+            }
+        ]
+    }
+
+
+@app.post("/talk-request/accept/", status_code=200, response_model=TalkRequestDetails)
+def accept_talk_request(accept_talk_request_body: AcceptTalkRequest):
+    return {
+        "id": accept_talk_request_body.id,
+        "event_time": "2021-10-03T10:30:00",
+        "address": {
+            "street": "Know Your Role Boulevard",
+            "city": "Las Vegas",
+            "state": "Nevada",
+            "country": "USA",
+        },
+        "topic": "FastAPI with Pydantic",
+        "status": "ACCEPTED",
+        "duration_in_minutes": 45,
+        "requester": "john@doe.com",
+    }
+
+
+@app.post("/talk-request/reject/", status_code=200, response_model=TalkRequestDetails)
+def reject_talk_request(reject_talk_request_body: RejectTalkRequest):
+    return {
+        "id": reject_talk_request_body.id,
+        "event_time": "2021-10-03T10:30:00",
+        "address": {
+            "street": "Know Your Role Boulevard",
+            "city": "Las Vegas",
+            "state": "Nevada",
+            "country": "USA",
+        },
+        "topic": "FastAPI with Pydantic",
+        "status": "REJECTED",
+        "duration_in_minutes": 45,
+        "requester": "john@doe.com",
     }
