@@ -13,7 +13,7 @@ app = FastAPI()
 app_config = load_config()
 
 connect_args = {"check_same_thread": False}
-engine = create_engine(app_config.SQLMODEL_DATABASE_URI, echo=False)
+engine = create_engine(app_config.SQLMODEL_DATABASE_URI, echo=False, connect_args=connect_args)
 
 
 def create_db_and_tables():

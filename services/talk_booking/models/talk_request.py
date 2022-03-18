@@ -1,7 +1,8 @@
 import datetime
 from enum import Enum
 
-from pydantic import BaseModel, EmailStr, PositiveInt
+from pydantic import EmailStr, PositiveInt
+from sqlmodel import SQLModel, Field
 
 from .address import Address
 
@@ -12,8 +13,8 @@ class TalkRequestStatus(str, Enum):
     REJECTED = "REJECTED"
 
 
-class TalkRequest(BaseModel):
-    id: str
+class TalkRequest(SQLModel, table=True):
+    id: str = Field(default=None, primary_key=True)
     event_time: datetime.datetime
     address: Address
     topic: str
