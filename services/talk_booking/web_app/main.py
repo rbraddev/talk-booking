@@ -1,19 +1,16 @@
-import pathlib
-import uuid
+from fastapi import FastAPI, Depends
+from sqlmodel import Session, SQLModel, create_engine, select
 
-from fastapi import FastAPI
-from sqlmodel import Session, SQLModel, create_engine
-
-from models.api_requests import AcceptTalkRequest, RejectTalkRequest, SubmitTalkRequest
-from models.api_responses import TalkRequestDetails, TalkRequestList
+from models import TalkRequest, Address
+from models.requests import AcceptTalkRequest, RejectTalkRequest, SubmitTalkRequest
+from models.responses import TalkRequestDetails, TalkRequestList
 
 from .config import load_config
 
 app = FastAPI()
 app_config = load_config()
 
-connect_args = {"check_same_thread": False}
-engine = create_engine(app_config.SQLMODEL_DATABASE_URI, echo=False, connect_args=connect_args)
+engine = create_engine(app_config.SQLMODEL_DATABASE_URI, echo=False)
 
 
 def create_db_and_tables():
@@ -36,36 +33,25 @@ def health_check():
 
 
 @app.post("/request-talk/", status_code=201, response_model=TalkRequestDetails)
-def request_talk(submit_talk_request: SubmitTalkRequest):
-    return {
-        "id": "unique_id",
-        "event_time": submit_talk_request.event_time,
-        "address": submit_talk_request.address,
-        "topic": submit_talk_request.topic,
-        "status": "PENDING",
-        "duration_in_minutes": submit_talk_request.duration_in_minutes,
-        "requester": submit_talk_request.requester,
-    }
-
+def request_talk(submit_talk_request: SubmitTalkRequest, session: Session = Depends(get_session)):
+    talk_request = TalkRequest(
+        event_time=submit_talk_request.event_time,
+        address=submit_talk_request.address,
+        topic=submit_talk_request.topic,
+        status="PENDING",
+        duration_in_minutes=submit_talk_request.duration_in_minutes,
+        requester=submit_talk_request.requester,
+    )
+    session.add(talk_request)
+    session.commit()
+    session.refresh(talk_request)
+    return talk_request
 
 @app.get("/talk-requests/", status_code=200, response_model=TalkRequestList)
-def talk_requests():
+def talk_requests(session: Session = Depends(get_session)):
     return {
         "results": [
-            {
-                "id": "unique_id",
-                "event_time": "2021-10-03T10:30:00",
-                "address": {
-                    "street": "Know Your Role Boulevard",
-                    "city": "Las Vegas",
-                    "state": "Nevada",
-                    "country": "USA",
-                },
-                "topic": "FastAPI with Pydantic",
-                "status": "PENDING",
-                "duration_in_minutes": 45,
-                "requester": "john@doe.com",
-            }
+            talk_request.dict() for talk_request in session.exec(select(TalkRequest)).all()
         ]
     }
 

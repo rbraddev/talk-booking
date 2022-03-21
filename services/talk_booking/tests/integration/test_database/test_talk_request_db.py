@@ -1,5 +1,4 @@
 import datetime
-import uuid
 
 from sqlmodel import Session, select
 
@@ -13,14 +12,13 @@ def test_talk_request(session: Session):
     THEN in can accessed by its id or listed
     """
     talk_request = TalkRequest(
-        id=str(uuid.uuid4()),
         event_time=datetime.datetime.utcnow(),
         address=Address(
             street="Sunny street 42",
             city="Awesome city",
             state="Best state",
             country="Ireland",
-        ),
+        ).dict(),
         duration_in_minutes=45,
         topic="Python type checking",
         requester="john@doe.com",
@@ -31,5 +29,5 @@ def test_talk_request(session: Session):
     session.commit()
 
 
-    assert session.exec(select(TalkRequest))[0] == talk_request
-    assert session.exec(select(TalkRequest).where(TalkRequest.id == talk_request.id)) == talk_request
+    assert session.exec(select(TalkRequest)).one() == talk_request
+    assert session.exec(select(TalkRequest).where(TalkRequest.id == talk_request.id)).one() == talk_request

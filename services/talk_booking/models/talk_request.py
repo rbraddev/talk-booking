@@ -1,8 +1,9 @@
 import datetime
 from enum import Enum
+from typing import Optional
 
 from pydantic import EmailStr, PositiveInt
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel, Field, JSON, Column
 
 from .address import Address
 
@@ -14,9 +15,9 @@ class TalkRequestStatus(str, Enum):
 
 
 class TalkRequest(SQLModel, table=True):
-    id: str = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     event_time: datetime.datetime
-    address: Address
+    address: dict = Field(sa_column=Column(JSON))
     topic: str
     duration_in_minutes: PositiveInt
     requester: EmailStr
