@@ -1,8 +1,8 @@
 import pytest
 from fastapi.testclient import TestClient
 
+from models import Address, TalkRequest
 from web_app.main import app
-from models import TalkRequest, Address
 
 
 @pytest.fixture
@@ -101,33 +101,66 @@ def test_list_requests(client, session):
     assert talk_requests[1]["requester"] == "john@doe.com"
 
 
-def test_accept_talk_request(client):
+def test_accept_talk_request(client, session):
     """
     GIVEN id of talk request
     WHEN accept talk request endpoint is called
     THEN request is accepted
     """
+    talk_request = TalkRequest(
+        event_time="2021-10-03T10:30:00",
+        address=Address(
+            street="Sunny street 42",
+            city="Sunny city 42000",
+            state="Sunny state",
+            country="Sunny country",
+        ),
+        duration_in_minutes=45,
+        topic="FastAPI with Pydantic",
+        requester="john@doe.com",
+        status="PENDING",
+    )
+    session.add(talk_request)
+    session.commit()
+    session.refresh(talk_request)
+
     response = client.post(
         "/talk-request/accept/",
-        json={"id": 1},
+        json={"id": talk_request.id},
     )
     assert response.status_code == 200
     response_body = response.json()
-    assert response_body["id"] == 1
+    assert response_body["id"] == talk_request.id
     assert response_body["status"] == "ACCEPTED"
 
 
-def test_reject_talk_request(client):
+def test_reject_talk_request(client, session):
     """
     GIVEN id of talk request
     WHEN reject talk request endpoint is called
-    THEN request is accepted
+    THEN request is rejected
     """
+    talk_request = TalkRequest(
+        event_time="2021-10-03T10:30:00",
+        address=Address(
+            street="Sunny street 42",
+            city="Sunny city 42000",
+            state="Sunny state",
+            country="Sunny country",
+        ),
+        duration_in_minutes=45,
+        topic="FastAPI with Pydantic",
+        requester="john@doe.com",
+        status="PENDING",
+    )
+    session.add(talk_request)
+    session.commit()
+    session.refresh(talk_request)
     response = client.post(
         "/talk-request/reject/",
-        json={"id": 1},
+        json={"id": talk_request.id},
     )
     assert response.status_code == 200
     response_body = response.json()
-    assert response_body["id"] == 1
+    assert response_body["id"] == talk_request.id
     assert response_body["status"] == "REJECTED"

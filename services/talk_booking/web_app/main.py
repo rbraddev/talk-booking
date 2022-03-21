@@ -1,7 +1,7 @@
-from fastapi import FastAPI, Depends
+from fastapi import Depends, FastAPI
 from sqlmodel import Session, SQLModel, create_engine, select
 
-from models import TalkRequest, Address
+from models import TalkRequest
 from models.requests import AcceptTalkRequest, RejectTalkRequest, SubmitTalkRequest
 from models.responses import TalkRequestDetails, TalkRequestList
 
@@ -33,7 +33,9 @@ def health_check():
 
 
 @app.post("/request-talk/", status_code=201, response_model=TalkRequestDetails)
-def request_talk(submit_talk_request: SubmitTalkRequest, session: Session = Depends(get_session)):
+def request_talk(
+    submit_talk_request: SubmitTalkRequest, session: Session = Depends(get_session)
+):
     talk_request = TalkRequest(
         event_time=submit_talk_request.event_time,
         address=submit_talk_request.address,
@@ -47,46 +49,38 @@ def request_talk(submit_talk_request: SubmitTalkRequest, session: Session = Depe
     session.refresh(talk_request)
     return talk_request
 
+
 @app.get("/talk-requests/", status_code=200, response_model=TalkRequestList)
 def talk_requests(session: Session = Depends(get_session)):
     return {
         "results": [
-            talk_request.dict() for talk_request in session.exec(select(TalkRequest)).all()
+            talk_request.dict()
+            for talk_request in session.exec(select(TalkRequest)).all()
         ]
     }
 
 
 @app.post("/talk-request/accept/", status_code=200, response_model=TalkRequestDetails)
-def accept_talk_request(accept_talk_request_body: AcceptTalkRequest):
-    return {
-        "id": accept_talk_request_body.id,
-        "event_time": "2021-10-03T10:30:00",
-        "address": {
-            "street": "Know Your Role Boulevard",
-            "city": "Las Vegas",
-            "state": "Nevada",
-            "country": "USA",
-        },
-        "topic": "FastAPI with Pydantic",
-        "status": "ACCEPTED",
-        "duration_in_minutes": 45,
-        "requester": "john@doe.com",
-    }
+def accept_talk_request(
+    accept_talk_request_body: AcceptTalkRequest, session=Depends(get_session)
+):
+    talk_request = session.get(TalkRequest, accept_talk_request_body.id)
+    talk_request.accept()
+    session.add(talk_request)
+    session.commit()
+    session.refresh(talk_request)
+
+    return talk_request
 
 
 @app.post("/talk-request/reject/", status_code=200, response_model=TalkRequestDetails)
-def reject_talk_request(reject_talk_request_body: RejectTalkRequest):
-    return {
-        "id": reject_talk_request_body.id,
-        "event_time": "2021-10-03T10:30:00",
-        "address": {
-            "street": "Know Your Role Boulevard",
-            "city": "Las Vegas",
-            "state": "Nevada",
-            "country": "USA",
-        },
-        "topic": "FastAPI with Pydantic",
-        "status": "REJECTED",
-        "duration_in_minutes": 45,
-        "requester": "john@doe.com",
-    }
+def reject_talk_request(
+    reject_talk_request_body: RejectTalkRequest, session=Depends(get_session)
+):
+    talk_request = session.get(TalkRequest, reject_talk_request_body.id)
+    talk_request.reject()
+    session.add(talk_request)
+    session.commit()
+    session.refresh(talk_request)
+
+    return talk_request

@@ -1,11 +1,11 @@
 import psycopg2
 import pytest
-from sqlmodel import create_engine, SQLModel, Session
 from fastapi.testclient import TestClient
+from sqlmodel import Session, SQLModel, create_engine
 
-from web_app.main import app, get_session
+from models import TalkRequest  # noqa: F401
 from web_app.config import load_config
-from models import TalkRequest
+from web_app.main import app, get_session
 
 
 @pytest.fixture(scope="session")
@@ -40,4 +40,4 @@ def client_fixture(session: Session):
 
     client = TestClient(app)
     yield client
-    app.dependency_overrides.clear() 
+    app.dependency_overrides.clear()

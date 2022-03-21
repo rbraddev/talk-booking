@@ -28,6 +28,8 @@ def test_talk_request(session: Session):
     session.add(talk_request)
     session.commit()
 
-
     assert session.exec(select(TalkRequest)).one() == talk_request
-    assert session.exec(select(TalkRequest).where(TalkRequest.id == talk_request.id)).one() == talk_request
+    assert (
+        session.exec(select(TalkRequest).where(TalkRequest.id == talk_request.id)).one()
+        == talk_request
+    )
