@@ -56,10 +56,9 @@ jobs:
       postgres:
         image: postgres
         env:
+          POSTGRES_PASSWORD: talkbooking
           POSTGRES_DB: talkbookingtest
           POSTGRES_USER: app
-          POSTGRES_PASSWORD: talkbooking
-          APP_ENVIRONMENT: test
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -80,5 +79,7 @@ jobs:
         run: poetry install
       - name: Run tests
         run: poetry run pytest --cov=./ --cov-report=xml tests/unit tests/integration
+        env:
+          APP_ENVIRONMENT: test
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
