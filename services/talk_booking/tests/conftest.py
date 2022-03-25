@@ -1,7 +1,7 @@
 import psycopg2
 import pytest
 from fastapi.testclient import TestClient
-from sqlmodel import Session, SQLModel, create_engine
+from sqlmodel import Session, create_engine
 
 from migrations import downgrade_migrations, upgrade_migrations
 from models import TalkRequest  # noqa: F401
