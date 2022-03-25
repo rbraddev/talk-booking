@@ -3,6 +3,7 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlmodel import Session, SQLModel, create_engine
 
+from migrations import downgrade_migrations, upgrade_migrations
 from models import TalkRequest  # noqa: F401
 from web_app.config import load_config
 from web_app.main import app, get_session
@@ -26,9 +27,11 @@ def database():
 def database_session(database):
     dsn = load_config().SQLMODEL_DATABASE_URI
     engine = create_engine(dsn)
-    SQLModel.metadata.create_all(engine)
+    # SQLModel.metadata.create_all(engine)
     with Session(engine) as session:
+        upgrade_migrations(dsn)
         yield session
+        downgrade_migrations(dsn)
 
 
 @pytest.fixture(name="client")
