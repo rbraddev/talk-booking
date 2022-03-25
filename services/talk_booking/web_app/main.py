@@ -33,7 +33,7 @@ def on_startup():
 
 @app.get("/health-check/")
 def health_check(response: Response):
-    engine = create_engine(app_config.SQLALCHEMY_DATABASE_URI)
+    engine = create_engine(app_config.SQLMODEL_DATABASE_URI)
     alembic_cfg = config.Config()
     alembic_cfg.set_main_option(
         "script_location",
