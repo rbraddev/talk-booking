@@ -10,7 +10,7 @@ BASE_PATH = pathlib.Path(__file__).parent.absolute()
 
 def load_alembic_config(dsn):
     alembic_cfg = Config(str(BASE_PATH / "alembic.ini"))
-    alembic_cfg.set_main_option("script_location", str(BASE_PATH / "alembic"))
+    alembic_cfg.set_main_option("script_location", str(BASE_PATH / "migrations"))
     alembic_cfg.set_main_option("sqlalchemy.url", dsn)
     return alembic_cfg
 
