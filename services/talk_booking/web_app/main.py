@@ -37,16 +37,20 @@ def health_check(response: Response):
     alembic_cfg = config.Config()
     alembic_cfg.set_main_option(
         "script_location",
-        str(pathlib.Path(__file__).parent.parent.absolute() / "alembic"),
+        str(pathlib.Path(__file__).parent.parent.absolute() / "migrations"),
     )
     db_script = script.ScriptDirectory.from_config(alembic_cfg)
     with engine.begin() as conn:
         context = migration.MigrationContext.configure(conn)
         if context.get_current_revision() != db_script.get_current_head():
             response.status_code = 400
-            return {"message": "Upgrade the database."}
+            return {
+                "message": "Upgrade the database.",
+            }
 
-    return {"message": "OK"}
+    return {
+        "message": "OK",
+    }
 
 
 @app.post("/request-talk/", status_code=201, response_model=TalkRequestDetails)

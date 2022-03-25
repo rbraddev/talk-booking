@@ -28,10 +28,10 @@ def database_session(database):
     dsn = load_config().SQLMODEL_DATABASE_URI
     engine = create_engine(dsn)
     # SQLModel.metadata.create_all(engine)
+    upgrade_migrations(dsn)
     with Session(engine) as session:
-        upgrade_migrations(dsn)
         yield session
-        downgrade_migrations(dsn)
+    downgrade_migrations(dsn)
 
 
 @pytest.fixture(name="client")
