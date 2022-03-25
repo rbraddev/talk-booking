@@ -34,7 +34,7 @@ class TestConfig(ProductionConfig):
 
     @property
     def SQLMODEL_DATABASE_URI(self):
-        return "postgresql://app:talkbooking@postgres:5432/talkbookingtest"
+        return "postgresql://app:talkbooking@localhost:5432/talkbookingtest"
 
 
 class LocalTestConfig(ProductionConfig):
