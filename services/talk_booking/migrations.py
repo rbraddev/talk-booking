@@ -26,4 +26,4 @@ def downgrade_migrations(dsn: str):
 
 
 if __name__ == "__main__":
-    upgrade_migrations(load_config().SQLALCHEMY_DATABASE_URI)
+    upgrade_migrations(load_config().SQLMODEL_DATABASE_URI)

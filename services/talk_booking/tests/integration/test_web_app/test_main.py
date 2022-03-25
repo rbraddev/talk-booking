@@ -1,13 +1,4 @@
-import pytest
-from fastapi.testclient import TestClient
-
 from models import Address, TalkRequest
-from web_app.main import app
-
-
-@pytest.fixture
-def client():
-    return TestClient(app)
 
 
 def test_health_check(client):
@@ -88,17 +79,17 @@ def test_list_requests(client, session):
 
     talk_requests = response_body["results"]
     assert isinstance(talk_requests[0]["id"], int)
-    assert talk_requests[1]["event_time"] == "2021-10-03T10:30:00"
-    assert talk_requests[1]["address"] == {
+    assert talk_requests[0]["event_time"] == "2021-10-03T10:30:00"
+    assert talk_requests[0]["address"] == {
         "street": "Know Your Role Boulevard",
         "city": "Las Vegas",
         "state": "Nevada",
         "country": "USA",
     }
-    assert talk_requests[1]["topic"] == "FastAPI with Pydantic"
-    assert talk_requests[1]["status"] == "PENDING"
-    assert talk_requests[1]["duration_in_minutes"] == 45
-    assert talk_requests[1]["requester"] == "john@doe.com"
+    assert talk_requests[0]["topic"] == "FastAPI with Pydantic"
+    assert talk_requests[0]["status"] == "PENDING"
+    assert talk_requests[0]["duration_in_minutes"] == 45
+    assert talk_requests[0]["requester"] == "john@doe.com"
 
 
 def test_accept_talk_request(client, session):
