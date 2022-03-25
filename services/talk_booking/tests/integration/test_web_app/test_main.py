@@ -1,6 +1,7 @@
 import pytest
 from fastapi.testclient import TestClient
 
+from models import Address, TalkRequest
 from web_app.main import app
 
 
@@ -43,7 +44,7 @@ def test_request_talk(client):
     )
     assert response.status_code == 201
     response_body = response.json()
-    assert isinstance(response_body["id"], str)
+    assert isinstance(response_body["id"], int)
     assert response_body["event_time"] == "2021-10-03T10:30:00"
     assert response_body["address"] == {
         "street": "Know Your Role Boulevard",
@@ -57,59 +58,109 @@ def test_request_talk(client):
     assert response_body["requester"] == "john@doe.com"
 
 
-def test_list_requests(client):
+def test_list_requests(client, session):
     """
     GIVEN
     WHEN list requests endpoint is called
     THEN list of requests is returned
     """
-    response = client.get("/talk-requests/")
+    talk_request = TalkRequest(
+        event_time="2021-10-03T10:30:00",
+        address=Address(
+            street="Know Your Role Boulevard",
+            city="Las Vegas",
+            state="Nevada",
+            country="USA",
+        ),
+        duration_in_minutes=45,
+        topic="FastAPI with Pydantic",
+        requester="john@doe.com",
+        status="PENDING",
+    )
+    session.add(talk_request)
+    session.commit()
+    response = client.get(
+        "/talk-requests/",
+    )
     assert response.status_code == 200
 
     response_body = response.json()
 
     talk_requests = response_body["results"]
-    assert isinstance(talk_requests[0]["id"], str)
-    assert talk_requests[0]["event_time"] == "2021-10-03T10:30:00"
-    assert talk_requests[0]["address"] == {
+    assert isinstance(talk_requests[0]["id"], int)
+    assert talk_requests[1]["event_time"] == "2021-10-03T10:30:00"
+    assert talk_requests[1]["address"] == {
         "street": "Know Your Role Boulevard",
         "city": "Las Vegas",
         "state": "Nevada",
         "country": "USA",
     }
-    assert talk_requests[0]["topic"] == "FastAPI with Pydantic"
-    assert talk_requests[0]["status"] == "PENDING"
-    assert talk_requests[0]["duration_in_minutes"] == 45
-    assert talk_requests[0]["requester"] == "john@doe.com"
+    assert talk_requests[1]["topic"] == "FastAPI with Pydantic"
+    assert talk_requests[1]["status"] == "PENDING"
+    assert talk_requests[1]["duration_in_minutes"] == 45
+    assert talk_requests[1]["requester"] == "john@doe.com"
 
 
-def test_accept_talk_request(client):
+def test_accept_talk_request(client, session):
     """
     GIVEN id of talk request
     WHEN accept talk request endpoint is called
     THEN request is accepted
     """
+    talk_request = TalkRequest(
+        event_time="2021-10-03T10:30:00",
+        address=Address(
+            street="Sunny street 42",
+            city="Sunny city 42000",
+            state="Sunny state",
+            country="Sunny country",
+        ),
+        duration_in_minutes=45,
+        topic="FastAPI with Pydantic",
+        requester="john@doe.com",
+        status="PENDING",
+    )
+    session.add(talk_request)
+    session.commit()
+    session.refresh(talk_request)
+
     response = client.post(
         "/talk-request/accept/",
-        json={"id": "unique_id"},
+        json={"id": talk_request.id},
     )
     assert response.status_code == 200
     response_body = response.json()
-    assert response_body["id"] == "unique_id"
+    assert response_body["id"] == talk_request.id
     assert response_body["status"] == "ACCEPTED"
 
 
-def test_reject_talk_request(client):
+def test_reject_talk_request(client, session):
     """
     GIVEN id of talk request
     WHEN reject talk request endpoint is called
-    THEN request is accepted
+    THEN request is rejected
     """
+    talk_request = TalkRequest(
+        event_time="2021-10-03T10:30:00",
+        address=Address(
+            street="Sunny street 42",
+            city="Sunny city 42000",
+            state="Sunny state",
+            country="Sunny country",
+        ),
+        duration_in_minutes=45,
+        topic="FastAPI with Pydantic",
+        requester="john@doe.com",
+        status="PENDING",
+    )
+    session.add(talk_request)
+    session.commit()
+    session.refresh(talk_request)
     response = client.post(
         "/talk-request/reject/",
-        json={"id": "unique_id"},
+        json={"id": talk_request.id},
     )
     assert response.status_code == 200
     response_body = response.json()
-    assert response_body["id"] == "unique_id"
+    assert response_body["id"] == talk_request.id
     assert response_body["status"] == "REJECTED"
